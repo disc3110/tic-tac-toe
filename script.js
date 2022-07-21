@@ -1,10 +1,6 @@
-const Player = (name, symbol) => {
- const getName = () => name;
- const getSymbol = () => symbol;
+import { Board } from "./modules/board";
+import { Player } from "./lib/player";
+import { TicTacToeFlow } from "./lib/tictactoeflow";
 
- return {getName, getSymbol}
-}
 
-const TicTacToe = (player1, player2) => {
-  let currentPlayer = player1
-}
+
