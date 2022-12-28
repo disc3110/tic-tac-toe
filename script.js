@@ -4,9 +4,10 @@ const Screen = (() => {
 
   const clearZone = () => gameZone.innerHTML = ''
 
-  function markcell(square){
-    console.log(square.target.id)
-    this.style.backgroundColor='black';
+  function markcell(squareId, playerColor){
+    let currentSquare = document.getElementById(squareId)
+    currentSquare.style.backgroundColor = playerColor
+    currentSquare.removeEventListener('click', TicTacToe.turn, false)
   }
 
   let askPlayerInfo = () => {
@@ -24,19 +25,19 @@ const Screen = (() => {
   let createGrid = () => {
     clearZone()
     let newBox
-    for (let i=1; i <= 9 ; i++){
+    for (let i=0; i < 9 ; i++){
       newBox = document.createElement('div');
       newBox.classList.add('boxes');
       newBox.setAttribute('id', `${i}`)
       newBox.classList.add(`box-${i}`);
       newBox.style.borderWidth = "0.5px";
       newBox.style.borderStyle = "solid";
-      newBox.addEventListener('click',markcell, false);
+      newBox.addEventListener('click',TicTacToe.turn, false);
       gameZone.appendChild(newBox)
     }
  }
 
- return {createGrid, askPlayerInfo, clearZone}
+ return {createGrid, askPlayerInfo, clearZone, markcell}
 })()
 
 
@@ -51,7 +52,7 @@ const Player = (name, color) => {
 }
 
 const TicTacToe = (() => {
-  let player1, player2
+  let player1, player2, currentplayer
 
   let savePlayerInfo = () => {
     let playerName = document.getElementById('player-name').value;
@@ -74,8 +75,17 @@ const TicTacToe = (() => {
     } 
   }
 
+  let rotateCurrentPlayer = () => {
+    currentplayer = currentplayer == player1 ? player2 : player1
+  }
+
+  const turn = (square) => {
+    Screen.markcell(square.target.id,currentplayer.color)
+    rotateCurrentPlayer()
+  }
+
   const game = () => {
-    let currentplayer = player1
+    currentplayer = player1
     Screen.createGrid()
   }
 
@@ -84,7 +94,7 @@ const TicTacToe = (() => {
   }
 
   return {
-    init, getPlayers
+    init, getPlayers, turn
   }
 })()
 
