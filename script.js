@@ -19,7 +19,6 @@ const Screen = (() => {
     gameZone.appendChild(playerInfoZone)
     const getInfoBtn = document.getElementById('get-info-btn')
     getInfoBtn.addEventListener('click', TicTacToe.getPlayers)
-    console.log(getInfoBtn)
   }
 
   let createGrid = () => {
@@ -67,7 +66,6 @@ const TicTacToe = (() => {
     if (!player1) {
       let playerInfo = savePlayerInfo()
       player1 = Player(playerInfo.playerName, playerInfo.playerColor)
-      console.log(playerInfo, player1)
       Screen.askPlayerInfo()
     } else if (!player2) {
       let playerInfo = savePlayerInfo()
@@ -80,23 +78,22 @@ const TicTacToe = (() => {
     currentplayer = currentplayer == player1 ? player2 : player1
   }
 
+  const checkTie = () => {
+    let emptyBoxes = board.some(e => typeof e == 'number')
+    return !emptyBoxes
+  }
+
   const checkWin = () => {
-    console.log(WIN_COMBINATIONS)
-    WIN_COMBINATIONS.forEach( combination => {
-      if (board[combination[0]] == board[combination[1]] && board[combination[1]] == board[combination[2]]) {
-        console.log(currentplayer, 'end game')
-      } else {
-        console.log('keep playing', combination)
-      }
-    })
+    let winner = WIN_COMBINATIONS.some(combination => board[combination[0]] == board[combination[1]] && board[combination[1]] == board[combination[2]])
+    return winner
   }
 
   const turn = (square) => {
     Screen.markcell(square.target.id,currentplayer.color)
     board[square.target.id] = currentplayer.name
-    checkWin()
-    rotateCurrentPlayer()
-    console.log(board)
+    if (checkWin()) console.log(currentplayer, 'end game')
+    else if (checkTie()) console.log('its a tie')
+    else rotateCurrentPlayer()
   }
 
   const startGame = () => {
