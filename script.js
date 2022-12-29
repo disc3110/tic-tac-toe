@@ -54,10 +54,9 @@ const Screen = (() => {
     player1NameZone.innerText = player1.name
     player1ScoreZone.innerText = player1.getScore()
     player2NameZone.innerText = player2.name
-    player1ScoreZone.innerText = player2.getScore();
+    player2ScoreZone.innerText = player2.getScore();
     playAgainBtn.addEventListener('click', TicTacToe.startGame, false)
     newGameBtn.addEventListener('click', TicTacToe.resetGAme)
-    console.log(player2.getScore())
   }
 
   const displayMessage = (message) => {
