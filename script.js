@@ -72,12 +72,16 @@ const TicTacToe = (() => {
   const getPlayers = () => {
     if (!player1) {
       let playerInfo = savePlayerInfo()
-      player1 = Player(playerInfo.playerName, playerInfo.playerColor)
+      if (playerInfo.playerName != "") {
+        player1 = Player(playerInfo.playerName, playerInfo.playerColor)
+      } 
       Screen.askPlayerInfo()
     } else if (!player2) {
       let playerInfo = savePlayerInfo()
-      player2 = Player(playerInfo.playerName, playerInfo.playerColor)
-      startGame()
+      if (playerInfo.playerName != "" && playerInfo.playerName != player1.name && playerInfo.playerColor != player1.color ) {
+        player2 = Player(playerInfo.playerName, playerInfo.playerColor)
+        startGame()
+      } else Screen.askPlayerInfo()
     } 
   }
 
