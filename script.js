@@ -21,6 +21,13 @@ const Screen = (() => {
     getInfoBtn.addEventListener('click', TicTacToe.getPlayers)
   }
 
+  const displayMessage = (message) => {
+    clearZone()
+    let messageContainer = document.createElement('div')
+    messageContainer.innerText = message
+    gameZone.appendChild(messageContainer)
+  }
+
   let createGrid = () => {
     clearZone()
     let newBox
@@ -36,7 +43,7 @@ const Screen = (() => {
     }
  }
 
- return {createGrid, askPlayerInfo, clearZone, markcell}
+ return {createGrid, askPlayerInfo, clearZone, markcell, displayMessage}
 })()
 
 
@@ -88,11 +95,15 @@ const TicTacToe = (() => {
     return winner
   }
 
+  const endGame =(message) => {
+    Screen.displayMessage(message)
+  }
+
   const turn = (square) => {
     Screen.markcell(square.target.id,currentplayer.color)
     board[square.target.id] = currentplayer.name
-    if (checkWin()) console.log(currentplayer, 'end game')
-    else if (checkTie()) console.log('its a tie')
+    if (checkWin()) endGame(`${currentplayer.name} Won!`)
+    else if (checkTie()) endGame("It is a Tie")
     else rotateCurrentPlayer()
   }
 
