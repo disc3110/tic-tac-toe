@@ -28,12 +28,18 @@ const Screen = (() => {
     currentSquare.removeEventListener('click', TicTacToe.turn, false)
   }
 
-  let askPlayerInfo = () => {
+  let askPlayerInfo = (player) => {
     clearZone()
     let playerInfoZone 
     playerInfoZone = document.createElement('div')
     playerInfoZone.innerHTML = 
-    '<form> <labe class="form-label"> Whats the name of the first player? </label> <input id="player-name" type="text" class="form-control"> <br> <label class="form-label"> Whats the color of the first player? </label> <input id="player-color" type="color" class="form-control"> <br> <p id="get-info-btn" class="btn btn-primary"> Submit </p > </form>'
+    `<form>
+      <labe class="form-label"> Whats the name of the ${player} player? </label> 
+      <input id="player-name" type="text" class="form-control"> <br> 
+      <label class="form-label"> Whats the color of the ${player} player? </label>
+      <input id="player-color" type="color" class="form-control"> <br> 
+      <p id="get-info-btn" class="btn btn-primary"> Submit </p > 
+    </form>`
     gameZone.appendChild(playerInfoZone)
     const getInfoBtn = document.getElementById('get-info-btn')
     getInfoBtn.addEventListener('click', TicTacToe.getPlayers)
@@ -105,7 +111,6 @@ const TicTacToe = (() => {
   let savePlayerInfo = () => {
     let playerName = document.getElementById('player-name').value;
     let playerColor = document.getElementById('player-color').value;
-    Screen.clearZone()
     return {playerName, playerColor}
   }
 
@@ -114,15 +119,16 @@ const TicTacToe = (() => {
       let playerInfo = savePlayerInfo()
       if (playerInfo.playerName != "") {
         player1 = Player(playerInfo.playerName, playerInfo.playerColor)
-      } else Screen.displayMessage("Player's name must not be empy")
-      Screen.askPlayerInfo()
+        Screen.askPlayerInfo("second") 
+      } else {
+        Screen.displayMessage("Player's name must not be empy") 
+      }
     } else if (!player2) {
       let playerInfo = savePlayerInfo()
       if (playerInfo.playerName != "" && playerInfo.playerName != player1.name && playerInfo.playerColor != player1.color ) {
         player2 = Player(playerInfo.playerName, playerInfo.playerColor)
         startGame()
       } else {
-        Screen.askPlayerInfo()
         Screen.displayMessage("Player's name must not be empy and must be different from player 1")
       }
     } 
@@ -165,11 +171,11 @@ const TicTacToe = (() => {
   const resetGAme = () => {
     player1 = ''
     player2 = ''
-    Screen.askPlayerInfo()
+    Screen.askPlayerInfo("first")
   }
 
   const init = () => {
-    Screen.askPlayerInfo()
+    Screen.askPlayerInfo("first")
   }
 
   return {
