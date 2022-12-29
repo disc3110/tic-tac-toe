@@ -4,6 +4,24 @@ const Screen = (() => {
 
   const clearZone = () => gameZone.innerHTML = ''
 
+  const endGameHTML = `
+  <div id="end-page" class="d-flex flex-column align-items-center">
+    <p id="result" class="fs-1">Player 2 won!</p>
+    <p class="fs-2">Score:</p>
+    <div class="d-flex">
+      <p id="player-one-name" class="fs-4 me-4">Player 1:</p>
+      <p id="player-one-score" class="fs-4"> 1 </p>
+    </div>
+    <div class="d-flex">
+      <p id="player-two-name" class="fs-4 me-4">Player 2:</p>
+      <p id="player-two-score" class="fs-4"> 0 </p>
+    </div>
+    <div>
+      <p id="play-again-btn" class="btn btn-dark"> Play Again </p >
+      <p id="new-game-btn" class="btn btn-dark"> Change Users </p >
+    </div>
+  </div>`
+
   function markcell(squareId, playerColor){
     let currentSquare = document.getElementById(squareId)
     currentSquare.style.backgroundColor = playerColor
@@ -21,11 +39,25 @@ const Screen = (() => {
     getInfoBtn.addEventListener('click', TicTacToe.getPlayers)
   }
 
-  const endGamePage = (winner) => {
+  const endGamePage = (result, player1, player2) => {
     clearZone()
-    let messageContainer = document.createElement('div')
-    messageContainer.innerText = winner
-    gameZone.appendChild(messageContainer)
+    gameZone.innerHTML = endGameHTML
+    let player1NameZone = document.getElementById("player-one-name")
+    let resultZone = document.getElementById("result")
+    let player1ScoreZone = document.getElementById("player-one-score")
+    let player2NameZone = document.getElementById("player-two-name")
+    let player2ScoreZone = document.getElementById("player-two-score")
+    let playAgainBtn = document.getElementById("play-again-btn")
+    let newGameBtn = document.getElementById("new-game-btn")
+
+    resultZone.innerText= result
+    player1NameZone.innerText = player1.name
+    player1ScoreZone.innerText = player1.getScore()
+    player2NameZone.innerText = player2.name
+    player1ScoreZone.innerText = player2.getScore();
+    playAgainBtn.addEventListener('click', TicTacToe.startGame, false)
+    newGameBtn.addEventListener('click', TicTacToe.resetGAme)
+    console.log(player2.getScore())
   }
 
   const displayMessage = (message) => {
@@ -112,14 +144,16 @@ const TicTacToe = (() => {
   }
 
   const endGame =(message) => {
-    Screen.displayMessage(message)
+    Screen.endGamePage(message, player1, player2)
   }
 
   const turn = (square) => {
     Screen.markcell(square.target.id,currentplayer.color)
     board[square.target.id] = currentplayer.name
-    if (checkWin()) endGame(`${currentplayer.name} Won!`)
-    else if (checkTie()) endGame("It is a Tie")
+    if (checkWin()) {
+      currentplayer.incrementScore()
+      endGame(`${currentplayer.name} Won!`)
+    } else if (checkTie()) endGame("It is a Tie")
     else rotateCurrentPlayer()
   }
 
@@ -129,12 +163,18 @@ const TicTacToe = (() => {
     Screen.createGrid()
   }
 
+  const resetGAme = () => {
+    player1 = ''
+    player2 = ''
+    Screen.askPlayerInfo()
+  }
+
   const init = () => {
     Screen.askPlayerInfo()
   }
 
   return {
-    init, getPlayers, turn
+    init, getPlayers, turn, startGame, resetGAme
   }
 })()
 
