@@ -52,7 +52,9 @@ const Player = (name, color) => {
 }
 
 const TicTacToe = (() => {
-  let player1, player2, currentplayer
+  let player1, player2, currentplayer, board
+
+  const WIN_COMBINATIONS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [6, 4, 2]]
 
   let savePlayerInfo = () => {
     let playerName = document.getElementById('player-name').value;
@@ -70,8 +72,7 @@ const TicTacToe = (() => {
     } else if (!player2) {
       let playerInfo = savePlayerInfo()
       player2 = Player(playerInfo.playerName, playerInfo.playerColor)
-      console.log(playerInfo, player1, player2)
-      game()
+      startGame()
     } 
   }
 
@@ -79,12 +80,27 @@ const TicTacToe = (() => {
     currentplayer = currentplayer == player1 ? player2 : player1
   }
 
-  const turn = (square) => {
-    Screen.markcell(square.target.id,currentplayer.color)
-    rotateCurrentPlayer()
+  const checkWin = () => {
+    console.log(WIN_COMBINATIONS)
+    WIN_COMBINATIONS.forEach( combination => {
+      if (board[combination[0]] == board[combination[1]] && board[combination[1]] == board[combination[2]]) {
+        console.log(currentplayer, 'end game')
+      } else {
+        console.log('keep playing', combination)
+      }
+    })
   }
 
-  const game = () => {
+  const turn = (square) => {
+    Screen.markcell(square.target.id,currentplayer.color)
+    board[square.target.id] = currentplayer.name
+    checkWin()
+    rotateCurrentPlayer()
+    console.log(board)
+  }
+
+  const startGame = () => {
+    board = Array.from(Array(9).keys())
     currentplayer = player1
     Screen.createGrid()
   }
@@ -100,19 +116,3 @@ const TicTacToe = (() => {
 
 TicTacToe.init()
 
-
-/*
-const TicTacToe = ((player1, player2) => {
-  WIN_COMBINATIONS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [6, 4, 2]]
-  let currentplayer = player1
-  let gameFinished = false
-  let winner = null
-
-  let rotateCurrentPlayer = () => {
-    currentplayer = currentplayer == player1 ? player2 : player1
-  }
-
-  return {currentplayer}
-})()
-
-*/
