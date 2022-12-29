@@ -21,11 +21,20 @@ const Screen = (() => {
     getInfoBtn.addEventListener('click', TicTacToe.getPlayers)
   }
 
-  const displayMessage = (message) => {
+  const endGamePage = (winner) => {
     clearZone()
     let messageContainer = document.createElement('div')
-    messageContainer.innerText = message
+    messageContainer.innerText = winner
     gameZone.appendChild(messageContainer)
+  }
+
+  const displayMessage = (message) => {
+    let alertZone = document.getElementById("alert")
+    let notice = document.getElementById("notice")
+    let btnClose = document.querySelector(".btn-close")
+    btnClose.addEventListener('click', () => alertZone.classList.add("d-none"))
+    alertZone.classList.remove("d-none")
+    notice.innerHTML = message
   }
 
   let createGrid = () => {
@@ -43,7 +52,7 @@ const Screen = (() => {
     }
  }
 
- return {createGrid, askPlayerInfo, clearZone, markcell, displayMessage}
+ return {createGrid, askPlayerInfo, clearZone, markcell, displayMessage, endGamePage}
 })()
 
 
@@ -74,14 +83,17 @@ const TicTacToe = (() => {
       let playerInfo = savePlayerInfo()
       if (playerInfo.playerName != "") {
         player1 = Player(playerInfo.playerName, playerInfo.playerColor)
-      } 
+      } else Screen.displayMessage("Player's name must not be empy")
       Screen.askPlayerInfo()
     } else if (!player2) {
       let playerInfo = savePlayerInfo()
       if (playerInfo.playerName != "" && playerInfo.playerName != player1.name && playerInfo.playerColor != player1.color ) {
         player2 = Player(playerInfo.playerName, playerInfo.playerColor)
         startGame()
-      } else Screen.askPlayerInfo()
+      } else {
+        Screen.askPlayerInfo()
+        Screen.displayMessage("Player's name must not be empy and must be different from player 1")
+      }
     } 
   }
 
